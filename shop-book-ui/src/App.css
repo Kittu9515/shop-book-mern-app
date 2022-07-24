@@ -1,0 +1,169 @@
+.App {
+  text-align: center;
+  margin-left: 30%;
+  margin-right: 30%;
+  word-wrap: break-word;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.navBar {
+  background-color: #caced4;
+  color:blue;
+  padding-left: 30px;
+  padding:10px;
+  text-align: left;
+}
+
+.MainHeading{
+  color:midnightblue;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.child{
+  margin-top:30px;
+  margin-left:33%;
+  text-align: left;
+  overflow: auto;
+}
+.subHeading{
+  padding-right:20px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+input[type=button]{
+  margin-left:10px;
+  border:none;
+  background-color: #37afd0;
+  padding:5px;
+  border-radius: 5px;
+  min-width: 30px;
+  color:white
+}
+
+input[type=submit]{
+  min-width: 30px;
+  margin-left:20px;
+  border:none;
+  padding:5px;
+  border-radius: 5px;
+  background-color: #37afd0;
+  color:white
+}
+
+table{
+  padding-top: 50px;
+  padding-left: 0px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.addButton {
+    /* position: fixed; */
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    color: white;
+    font-size: 25px;
+    background-color: #37afd0;
+    border:none;
+}
+
+.bottom{
+  /* position: fixed; */
+  display: flex;
+  padding-top:10px;
+  padding-left:325px;
+  padding-bottom: 10px;
+}
+
+.collapsible .content {
+  padding: 10px;
+  padding-top:15px;
+  margin-bottom: 10px;
+  width: 420px;
+  background-color: rgb(240, 240, 240);
+  font-size: 14px;
+  text-align: center;
+  border: 0.2px solid rgb(15, 14, 14);
+  border-radius: 5px !important;
+}
+.collapsible .header {
+  background-color: rgb(255, 255, 255);
+  padding: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  display: flex;
+  width: 420px;
+  justify-content: space-between;
+  border: 0.2px solid rgb(15, 14, 14);
+  border-radius: 5px !important;
+}
+.collapsible .header .title {
+  font-weight: 400;
+}
+.preferences label {
+  display: block;
+  padding-bottom: 4px;
+}
+
+
+.as-popup-container {
+  height: 40vh;
+  width: 30vw;
+  border-radius: 5px;
+  background-color: #fff;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 12px;
+  border-radius: 5px;
+  display: block;
+  overflow: auto;
+  padding-top: 20px;
+}
+
+.as-popup-container.hide {
+    display: none;
+  }
+
+  .productBox{
+      background-color: #fff;
+  }

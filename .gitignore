@@ -1,0 +1,6 @@
+/server/node_modules
+/shop-book-ui/node_modules
+
+
+# dependencies
+*/node_modules

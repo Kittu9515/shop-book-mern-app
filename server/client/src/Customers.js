@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import useCollapse from 'react-collapsed';
 import axios from 'axios';
+import {Buffer} from 'buffer';
 
 export default function Customers(){
     const perPage = 10;
@@ -47,17 +48,24 @@ export default function Customers(){
     async function fetchCustomersData(){
         //call api to get data & store it in localStoreProducts
         try{
-            let resp = await axios.get(`http://localhost:8888/api/customers`);
+            setLoading(true);
+            let resp = await axios.get(`/api/customers`);
             console.log(resp.data.customers);
             //setLocalStoreProducts(data);
             //set totalpageCount by doing totalCount/perPage
             setLocalStoreCustomers(resp.data.customers);
             //setProducts should get called after we fetch data
             //setLocalStoreProducts is assigning in asynchronous somehow so adding data from resp only
+            resp.data.customers.map((customer)=>{
+                    let newData = Buffer.from(customer.image).toString("base64")
+                    customer.image=newData;
+                    console.log("base64 encoded string")
+                    console.log(customer.image);
+            })
             setPageCount(1);
             setTotalPageCount(resp.data.customers.length/perPage);
             setCustomers(resp.data.customers.slice((pageCount-1)*perPage,pageCount*perPage));
-            resp = await axios.get(`http://localhost:8888/api/products`);
+            resp = await axios.get(`/api/products`);
             console.log(resp.data.products);
             //setLocalStoreProducts(data);
             //set totalpageCount by doing totalCount/perPage
@@ -67,6 +75,7 @@ export default function Customers(){
             })
             setProducts(pros);
             console.log(pros);
+            setLoading(false);
         }catch(error){
             console.log(error);
         }
@@ -90,16 +99,27 @@ export default function Customers(){
         if(e.nativeEvent.submitter.value === "Update"){
             console.log(e);
             //get the updated values & submit in DB
+            console.log(e.target[3].files[0]);
+            const file = e.target[3].files[0];
+            file.originalname = e.target[0].value;
+            console.log(file);
+            const fd = new FormData();
+            fd.append("image",file,e.target[0].value);
+            fd.append("filename",e.target[0].value);
+            fd.append("name",e.target[0].value)
+            fd.append("amount",e.target[1].value==''?0:parseInt(e.target[1].value));
+            fd.append("transactions",e.target[2].value);
             try{
-                const customer = {
-                    name:e.target[0].value,
-                    amount:parseInt(e.target[1].value),
-                    transactions:e.target[2].value,
-                }
-             let resp = await axios.put(`http://localhost:8888/api/customer/`+e.target[4].id,customer);
+                // const customer = {
+                //     name:e.target[0].value,
+                //     amount:parseInt(e.target[1].value),
+                //     transactions:e.target[2].value,
+                //     image:img,
+                // }
+             let resp = await axios.put(`/api/customer/`+e.target[4].id,fd);
              console.log(resp);
              alert(`${e.target[0].value} updated successfully`);
-            //  fetchCustomersData();
+             fetchCustomersData();
             }
             catch(error)
             {
@@ -107,7 +127,7 @@ export default function Customers(){
             }
         }else{
             try{
-             let resp = await axios.delete(`http://localhost:8888/api/customer/`+e.target[3].id);
+             let resp = await axios.delete(`/api/customer/`+e.target[4].id);
              console.log(resp);
              alert(`${e.target[0].value} deleted successfully`);
              fetchCustomersData();
@@ -126,12 +146,20 @@ export default function Customers(){
             console.log(e);
             //Add product in DB
             try{
+                const file = e.target[3].files[0];
+                file.originalname = e.target[0].value;
+                const fd = new FormData();
+                fd.append("image",file,e.target[0].value);
+                fd.append("filename",e.target[0].value);
+                fd.append("name",e.target[0].value)
+                fd.append("amount",e.target[1].value==''?0:parseInt(e.target[1].value));
+                fd.append("transactions",e.target[2].value);
                 const customer = {
                     name:e.target[0].value,
                     amount:e.target[1].value,
                     transactions:e.target[2].value,
                 }
-             let resp = await axios.post(`http://localhost:8888/api/customer`,customer);
+             let resp = await axios.post(`/api/customer`,fd);
              alert(`${e.target[0].value} added successfully`);
              setShowAddPanel(false);
              fetchCustomersData();
@@ -155,10 +183,10 @@ export default function Customers(){
            <input type="button" value="Add customer" onClick={()=>{setShowAddPanel(true)}}/>          
            <table border='0' cellPadding='5' cellSpacing='0'>
            {
-           customers.length!=0 ? !loading ? customers.map((customer) => {
+            !loading ? customers.map((customer) => {
               return (
                 <Section title={customer.name} key={customer._id}>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} Content-Type="multipart/form-data">
                 <tr>
                     <td>Name</td> 
                     <td> <input type="text" defaultValue={customer.name||''}/></td>
@@ -177,16 +205,16 @@ export default function Customers(){
                         </textArea>
                     </td>
                  </tr>
-                 {/* <tr >
+                 <tr >
                     <td colSpan={2}>
-                        <input type="file" name="upload" style={{marginLeft:100}} onChange={uploadFile}/>
+                        <input type="file" name="image" id="image" style={{marginLeft:100}}/>
                     </td>
                  </tr>
                  <tr>
                     <td colSpan={2}>
-                         <img src={image||''} width="200px" height="200px" style={{marginLeft:100}}/>
+                         <img src={`data:image/png;base64,${customer.image}`} width="200px" height="200px" alt="No Image" style={{marginLeft:100}}/>
                     </td>
-                 </tr> */}
+                 </tr>
                  <tr>
                     <td>
 
@@ -200,7 +228,9 @@ export default function Customers(){
                  <br/>
                  </Section>
               )
-            }):<center style={{color:"grey"}}>Loading...</center>:
+            }):<center style={{color:"grey"}}>Loading...</center>}
+           {
+                customers.length==0 && !loading &&
             <pre style={{color:"grey"}}>No customers found</pre>
            }
            </table>
@@ -229,6 +259,11 @@ export default function Customers(){
                             <td>
                                 <textArea rows="10" defaultValue={''}/>
                             </td>
+                        </tr>
+                        <tr >
+                        <td colSpan={2}>
+                            <input type="file" name="image" id="image" alt="No Image" style={{marginLeft:100}}/>
+                        </td>
                         </tr>
                         <tr>
                             <td></td>

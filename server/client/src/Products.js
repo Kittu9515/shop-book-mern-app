@@ -46,7 +46,7 @@ export default function Products(){
     async function fetchProductsData(){
         //call api to get data & store it in localStoreProducts
         try{
-            let resp = await axios.get(`http://localhost:8888/api/products`);
+            let resp = await axios.get(`/api/products`);
             console.log(resp.data.products);
             //setLocalStoreProducts(data);
             //set totalpageCount by doing totalCount/perPage
@@ -85,7 +85,7 @@ export default function Products(){
                     price:parseInt(e.target[1].value),
                     quantity:parseInt(e.target[2].value),
                 }
-             let resp = await axios.put(`http://localhost:8888/api/product/`+e.target[3].id,product);
+             let resp = await axios.put(`/api/product/`+e.target[3].id,product);
              console.log(resp);
              alert(`${e.target[0].value} updated successfully`);
             //  fetchProductsData();
@@ -96,7 +96,7 @@ export default function Products(){
             }
         }else{
             try{
-             let resp = await axios.delete(`http://localhost:8888/api/product/`+e.target[3].id);
+             let resp = await axios.delete(`/api/product/`+e.target[3].id);
              console.log(resp);
              alert(`${e.target[0].value} deleted successfully`);
              fetchProductsData();
@@ -120,7 +120,7 @@ export default function Products(){
                     price:e.target[1].value,
                     quantity:e.target[2].value,
                 }
-             let resp = await axios.post(`http://localhost:8888/api/product`,product);
+             let resp = await axios.post(`/api/product`,product);
              alert(`${e.target[0].value} added successfully`);
              setShowAddPanel(false);
              fetchProductsData();
